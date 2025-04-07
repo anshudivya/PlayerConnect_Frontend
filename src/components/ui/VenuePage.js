@@ -1,5 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import styled from 'styled-components';
+import { useNavigate } from 'react-router-dom';
 
 const VenuesContainer = styled.div`
     padding: 40px;
@@ -34,7 +35,6 @@ const SearchContainer = styled.div`
     justify-content: space-between;
     align-items: center;
     margin-bottom: 30px;
-    
 
     @media (max-width: 600px) {
         flex-direction: column;
@@ -62,6 +62,28 @@ const FilterButton = styled.button`
     border: none;
     border-radius: 4px;
     cursor: pointer;
+    position: relative;
+`;
+
+const FilterOptions = styled.div`
+    position: absolute;
+    top: 100%;
+    left: 0;
+    background-color: white;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    width: 150px;
+    display: ${({ isOpen }) => (isOpen ? 'block' : 'none')};
+    z-index: 10;
+`;
+
+const FilterOption = styled.div`
+    padding: 10px;
+    cursor: pointer;
+
+    &:hover {
+        background-color: #f0f0f0;
+    }
 `;
 
 const VenueGrid = styled.div`
@@ -124,7 +146,7 @@ const BookButton = styled.button`
 `;
 
 function VenuePage({ onVenuesLoaded }) {
-    const feed=[
+    const feed = [
         {
             "id": 1,
             "name": "Downtown Sports Complex",
@@ -150,7 +172,7 @@ function VenuePage({ onVenuesLoaded }) {
             "image": "https://via.placeholder.com/350x200"
         },
         {
-            "id":4,
+            "id": 4,
             "name": "Riverside Tennis Club",
             "address": "456 Park Ave, Riverside - 4.1 km",
             "sports": ["Tennis", "Badminton"],
@@ -158,22 +180,21 @@ function VenuePage({ onVenuesLoaded }) {
             "image": "https://via.placeholder.com/350x200"
         },
         // ... more venue objects
-    ]
+    ];
     const [venues, setVenues] = useState([]);
     const [loading, setLoading] = useState(true);
     const [error, setError] = useState(null);
+    const [selectedSport, setSelectedSport] = useState('All Sports');
+    const [isFilterOpen, setIsFilterOpen] = useState(false);
+    const navigate = useNavigate();
+    const [isLoggedIn, setIsLoggedIn] = useState(false);
 
     useEffect(() => {
         async function getVenues() {
             setLoading(true);
             setError(null);
             try {
-                // const response = await fetch('/api/venues'); // Replace with your actual endpoint
-                // if (!response.ok) {
-                //     throw new Error(`HTTP error! status: ${response.status}`);
-                // }
-                // const data = await response.json();
-                const data=feed
+                const data = feed;
                 setVenues(data);
                 console.log("Venues fetched in VenuePage:", data);
                 if (onVenuesLoaded) {
@@ -187,10 +208,33 @@ function VenuePage({ onVenuesLoaded }) {
         }
 
         getVenues();
-    }, []);
+
+        // Check login status
+        const loggedIn = localStorage.getItem('isLoggedIn');
+        setIsLoggedIn(!!loggedIn);
+    }, [onVenuesLoaded]);
 
     if (loading) return <p>Loading...</p>;
     if (error) return <p>Error: {error.message}</p>;
+
+    const handleBookNow = (venue) => {
+        if (isLoggedIn) {
+            navigate(`/availability/bookvenue/${venue.id}`);
+        } else {
+            navigate('/login');
+        }
+    };
+
+    const handleSportFilterChange = (sport) => {
+        setSelectedSport(sport);
+        setIsFilterOpen(false);
+    };
+
+    const filteredVenues = selectedSport === 'All Sports'
+        ? venues
+        : venues.filter(venue => venue.sports.includes(selectedSport));
+
+    const allSports = ['All Sports', 'Football', 'Cricket', 'Badminton', 'Tennis'];
 
     return (
         <VenuesContainer>
@@ -199,11 +243,20 @@ function VenuePage({ onVenuesLoaded }) {
 
             <SearchContainer>
                 <SearchInput placeholder="Search venues..." />
-                <FilterButton>Show Filters</FilterButton>
+                <FilterButton onClick={() => setIsFilterOpen(!isFilterOpen)}>
+                    Filter Sports
+                    <FilterOptions isOpen={isFilterOpen}>
+                        {allSports.map(sport => (
+                            <FilterOption key={sport} onClick={() => handleSportFilterChange(sport)}>
+                                {sport}
+                            </FilterOption>
+                        ))}
+                    </FilterOptions>
+                </FilterButton>
             </SearchContainer>
 
             <VenueGrid>
-                {venues.map((venue) => (
+                {filteredVenues.map((venue) => (
                     <VenueCard key={venue.id}>
                         <VenueImage src={venue.image} alt={venue.name} />
                         <VenueName>{venue.name}</VenueName>
@@ -213,8 +266,8 @@ function VenuePage({ onVenuesLoaded }) {
                                 <SportTag key={index}>{sport}</SportTag>
                             ))}
                         </VenueSports>
-                        <VenuePrice>From ${venue.price}/hr</VenuePrice>
-                        <BookButton>Book Now</BookButton>
+                        <VenuePrice>₹{venue.price}/hr</VenuePrice>
+                        <BookButton onClick={() => handleBookNow(venue)}>Book Now</BookButton>
                     </VenueCard>
                 ))}
             </VenueGrid>
