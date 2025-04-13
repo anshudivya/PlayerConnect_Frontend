@@ -14,6 +14,7 @@ const GradientSection = styled.div`
 
     @media (max-width: 768px) {
         padding: 60px 20px;
+        margin-top:30px;
     }
 `;
 
@@ -38,6 +39,7 @@ const GradientH1 = styled.h1`
 const GradientP = styled.p`
     font-size: 1.1em;
     margin-bottom: 30px;
+    margin-top:30px;
 
     @media (max-width: 768px) {
         font-size: 1em;
@@ -110,6 +112,9 @@ function Welcome() {
     const handleFindVenuesClick = () => {
         navigate('/venues');
     };
+    const handleFindEventsClick = () => {
+        navigate('/events');
+    };
 
     return (
         <div>
@@ -121,7 +126,7 @@ function Welcome() {
                 </GradientP>
                 <Buttons>
                     <Button onClick={handleFindVenuesClick}>Find Venues</Button>
-                    <Button>Join Events</Button>
+                    <Button onClick={handleFindEventsClick}>Join Events</Button>
                 </Buttons>
 
                 <ContentSection>

@@ -1,21 +1,17 @@
-import React, { useState } from 'react';
-import LoginForm from './LoginForm';
+import React, { useState, useEffect } from 'react';
 import Cart from './Cart';
 import { Link, useNavigate } from 'react-router-dom';
 import { FaHome, FaMapMarkerAlt, FaCalendarAlt, FaTrophy, FaSearch } from 'react-icons/fa';
 
-export function Header({ eventsSectionRef }) {
-    const [showLoginModal, setShowLoginModal] = useState(false);
+export function Header({ showSignInButton, onSignInButtonVisibility }) { // Add onSignInButtonVisibility prop
+    const navigate = useNavigate();
     const [showCartPopup, setShowCartPopup] = useState(false);
     const [cartItems, setCartItems] = useState(['Event 1', 'Place 2']);
-    const navigate = useNavigate(); // Add useNavigate hook
+
 
     const handleLoginClick = () => {
-        setShowLoginModal(true);
-    };
-
-    const handleCloseModal = () => {
-        setShowLoginModal(false);
+        onSignInButtonVisibility(false); // Notify App.js to hide the button
+        navigate('/login');
     };
 
     const handleCartClick = () => {
@@ -26,10 +22,7 @@ export function Header({ eventsSectionRef }) {
         setShowCartPopup(false);
     };
 
-    const handleLoginSuccess = () => {
-        handleCloseModal(); // Close the modal
-        navigate('/'); // Redirect to the home page
-    };
+
 
     return (
         <header>
@@ -43,19 +36,18 @@ export function Header({ eventsSectionRef }) {
                 <Link to="/venues">
                     <FaMapMarkerAlt /> Venues
                 </Link>
-                <a href="#events-section">
+                <Link to="/events">
                     <FaCalendarAlt /> Events
-                </a>
+                </Link>
                 <a href="#" onClick={handleCartClick}>
                     <FaTrophy /> Cart
                 </a>
-                <div className="search-bar">
-                    <FaSearch />
-                    <input type="text" placeholder="Search..." className="search-input" />
-                </div>
-                <button className="sign-in-button" onClick={handleLoginClick}>Sign In</button>
+
+                {showSignInButton && (
+                    <button className="sign-in-button" onClick={handleLoginClick}>Sign In</button>
+                )}
             </nav>
-            {showLoginModal && <LoginForm onClose={handleCloseModal} onLoginSuccess={handleLoginSuccess} />}
+
             {showCartPopup && <Cart cartItems={cartItems} onClose={handleCloseCartPopup} />}
         </header>
     );

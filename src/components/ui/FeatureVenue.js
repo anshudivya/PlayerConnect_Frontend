@@ -1,30 +1,34 @@
 import React, { useState } from 'react';
 import styled from 'styled-components';
 import VenuePage from "./VenuePage";
+import { useNavigate } from 'react-router-dom';
 
 const FeaturedVenuesContainer = styled.div`
     padding: 20px;
-    width: 100%;
+    width: 80%;
     max-width: 1600px;
     margin: 20px auto;
     background-color: white
 `;
 
 const FeaturedVenuesTitle = styled.h6`
-    font-size: 1.2rem;
+    font-size: 1.8rem;
     margin-bottom: 20px;
     display: flex;
-    justify-content:space-around;
-    align-items: baseline;
+
+    justify-content:space-between;
+    margin-left: 32px;
+    margin-right: 30px;
+    
     
 `;
 
 const ViewAllLink = styled.a`
     color: #007bff;
     text-decoration: none;
-    font-size: 0.8rem;
+    font-size: 1.2rem;
     display: flex;
-    align-items: center;
+    align-items: stretch;
 `;
 
 const VenueGrid = styled.div`
@@ -43,14 +47,22 @@ const VenueGrid = styled.div`
 `;
 
 const VenueCard = styled.div`
-    background-color: white;
+    background: #fff;
+    padding: 20px;
     border-radius: 8px;
-    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
-    padding: 15px;
-    width: 280px;
-    height: 380px;
-    display: flex;
-    flex-direction: column;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    text-align: left;
+    border: 1px solid #e0e0e0;
+    transition: transform 0.2s ease-in-out;
+
+    @media (max-width: 768px) {
+        padding: 15px;
+    }
+
+    &:hover{
+        transform: translateY(-5px);
+        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+    }
 `;
 
 const VenueImage = styled.img`
@@ -138,10 +150,15 @@ const AvailableNow = styled.span`
 
 function FeaturedVenues() {
     const [venues, setVenues] = useState(null);
+    const navigate = useNavigate();
 
     const handleVenuesLoaded = (data) => {
         console.log("Venues received in FeaturedVenues:", data);
         setVenues(data);
+    };
+
+    const handlelogin = () => {
+        navigate('/login');
     };
 
     if (!venues) {
@@ -160,7 +177,7 @@ function FeaturedVenues() {
                 {venues.slice(0, 4).map((venue) => (
                     <VenueCard key={venue.id}>
                         <VenueImage src={venue.image} alt={venue.name} />
-                        <AvailableNow>Available Now</AvailableNow>
+                        {/*<AvailableNow>Available Now</AvailableNow>*/}
                         <VenueRating>
                             <Rating>★ 4.5</Rating>
                             <OpenStatus>Open</OpenStatus>
@@ -172,8 +189,8 @@ function FeaturedVenues() {
                                 <SportTag key={index}>{sport}</SportTag>
                             ))}
                         </VenueSports>
-                        <VenuePrice>From ${venue.price}/hr</VenuePrice>
-                        <BookButton>Book Now</BookButton>
+                        <VenuePrice>From Rs. {venue.price}/hr</VenuePrice>
+                        <BookButton onClick={handlelogin}>Book Now</BookButton>
                     </VenueCard>
                 ))}
             </VenueGrid>

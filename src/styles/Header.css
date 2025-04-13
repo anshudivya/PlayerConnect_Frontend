@@ -1,48 +1,45 @@
 /* Header.css */
-
 header {
     display: flex;
     justify-content: space-between;
     align-items: center;
     padding: 20px;
     background-color: white;
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    z-index: 100;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+    flex-wrap: wrap;
 }
 
 .logo {
     font-size: 1.5em;
     font-weight: bold;
     color: #333;
+    margin-bottom: 10px;
+    width: 100%;
+    text-align: center;
 }
 
 nav {
     display: flex;
-    align-items: center;
+    flex-wrap: wrap;
+    justify-content: center;
+    width: 100%;
+    text-align: center;
 }
 
 nav a {
-    margin: 0 10px;
+    margin: 10px 0;
     text-decoration: none;
     color: #333;
     display: flex;
     align-items: center;
-}
-
-nav a svg {
-    margin-right: 5px;
-}
-
-.search-bar {
-    display: flex;
-    align-items: center;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    padding: 5px;
-}
-
-.search-input {
-    border: none;
-    outline: none;
-    padding: 5px;
+    width: 100%;
+    padding: 5px 0;
+    box-sizing: border-box;
 }
 
 .sign-in-button {
@@ -51,4 +48,83 @@ nav a svg {
     padding: 8px 15px;
     border-radius: 5px;
     cursor: pointer;
+    margin-top: 10px;
+    width: 100%;
+}
+
+/* Media query for larger screens */
+@media (min-width: 768px) {
+    header {
+        flex-wrap: nowrap;
+        justify-content: space-evenly;
+        align-items: center;
+
+    }
+
+    .logo {
+        margin-bottom: 0;
+        width: auto;
+        text-align: left;
+    }
+
+    nav {
+        flex-direction: row;
+        flex-wrap: nowrap;
+        justify-content: flex-start;
+        width: auto;
+        text-align: left;
+    }
+
+    nav a {
+        margin: 0 10px;
+        width: auto;
+        padding: 0;
+        text-align: left;
+    }
+
+    .sign-in-button {
+        margin-top: 0;
+        width: auto;
+    }
+}
+
+/* New styles for small screens */
+@media (max-width: 580px) {
+    header {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+
+    .logo {
+        margin-bottom: 0;
+        text-align: left;
+        width: auto;
+    }
+
+    .sign-in-button {
+        margin-top: 0;
+        margin-left: auto;
+        width: auto;
+    }
+
+    .logo-and-button {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        width: 100%;
+        margin-bottom: 10px;
+    }
+
+    nav {
+        flex-direction: row;
+        width: 90%;
+        justify-content: flex-start;
+    }
+
+    nav a {
+        width: auto;
+        text-align: center;
+        padding: 10px 15px;
+        margin: 5px;
+    }
 }

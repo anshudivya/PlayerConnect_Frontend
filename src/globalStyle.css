@@ -1,0 +1,7 @@
+/* globalStyles.css */
+
+body {
+    padding-top: 80px; /* Adjust this value to match your header's height */
+    margin: 0;
+    overflow-y: scroll; /* Ensure the body is scrollable */
+}
